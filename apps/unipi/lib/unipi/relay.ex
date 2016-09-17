@@ -26,6 +26,13 @@ defmodule Unipi.Relay do
     GenServer.call(__MODULE__, {:state, port})
   end
 
+  def toggle(port) do
+     case state(port) do
+       :on -> off(port)
+       :off -> on(port)
+     end
+  end
+
   ## Private
   #
   def handle_call({:on, port}, _from, i2c) do

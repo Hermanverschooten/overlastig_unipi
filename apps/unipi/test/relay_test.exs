@@ -15,4 +15,11 @@ defmodule RelayTest do
     assert :ok == Relay.on(1)
     assert :on == Relay.state(1)
   end
+
+  test "Toggle relay 1" do
+    assert :ok == Relay.off(1)
+    assert :off == Relay.state(1)
+    assert :ok == Relay.toggle(1)
+    assert :on == Relay.state(1)
+  end
 end
