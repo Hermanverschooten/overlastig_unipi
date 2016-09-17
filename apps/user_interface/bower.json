@@ -1,0 +1,6 @@
+{
+  "name": "relay_channels",
+  "dependencies": {
+    "jquery": "^3.1.0"
+  }
+}

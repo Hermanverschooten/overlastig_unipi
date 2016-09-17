@@ -12,6 +12,7 @@ defmodule UserInterface.PageController do
   def toggle(conn, %{ "button" => button}) do
     {relay, _rest} = Integer.parse(button)
     Relay.toggle(relay)
+    broadcast_change(relay, Relay.state(relay))
     redirect(conn, to: page_path(conn, :index))
   end
 
@@ -26,5 +27,14 @@ defmodule UserInterface.PageController do
       %Button{name: "Relay 7", relay: 7, status: Relay.state(7)},
       %Button{name: "Relay 8", relay: 8, status: Relay.state(8)}
     ]
+  end
+
+  defp broadcast_change(relay, state) do
+    payload = %{
+      relay: relay,
+      state: state
+    }
+
+    UserInterface.Endpoint.broadcast! "relay_changes:lobby","change", payload
   end
 end

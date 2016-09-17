@@ -1,6 +1,6 @@
 <div id='button-list'>
 <%= for button <-  @relays do %>
-  <%= link to: page_path(@conn, :toggle, button.relay), class: button.status do %>
+  <%= link to: page_path(@conn, :toggle, button.relay), class: button.status, id: button.relay do %>
     <%= button.name %>
   <%end%>
 <% end %>
