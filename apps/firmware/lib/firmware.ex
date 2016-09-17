@@ -11,7 +11,7 @@ defmodule Firmware do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # worker(Firmware.Worker, [arg1, arg2, arg3]),
+      worker(Unipi.Relay, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
