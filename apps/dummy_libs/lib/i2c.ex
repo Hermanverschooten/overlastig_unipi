@@ -8,11 +8,11 @@ defmodule I2c do
   end
 
   def write(pid, << register , value >>) do
-    GenServer.call(pid, {:write, register - 1 , value})
+    GenServer.call(pid, {:write, register , value})
   end
 
   def write_read(pid, << register >>, length) do
-    GenServer.call(pid, {:write_read, register - 1, length})
+    GenServer.call(pid, {:write_read, register, length})
   end
 
   def read(pid, length) do
