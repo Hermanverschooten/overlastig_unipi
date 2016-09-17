@@ -6,11 +6,9 @@ defmodule Firmware do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    Nerves.Networking.setup :eth0
-    Nerves.Cell.setup
-
     # Define workers and child supervisors to be supervised
     children = [
+      worker(Task, [fn -> start_network end], restart: :transient),
       worker(Unipi.Relay, [])
     ]
 
@@ -20,4 +18,8 @@ defmodule Firmware do
     Supervisor.start_link(children, opts)
   end
 
+  defp start_network do
+    Nerves.Networking.setup :eth0, [mode: "dhcp"]
+    Nerves.Cell.setup
+  end
 end
