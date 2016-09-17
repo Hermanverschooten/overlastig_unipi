@@ -22,4 +22,15 @@ defmodule RelayTest do
     assert :ok == Relay.toggle(1)
     assert :on == Relay.state(1)
   end
+
+  test "Out of range relays do not throw errors" do
+    assert :error == Relay.on(-1)
+    assert :error == Relay.on(100)
+
+    assert :error == Relay.off(-1)
+    assert :error == Relay.off(100)
+
+    assert :error == Relay.state(-1)
+    assert :error == Relay.state(100)
+  end
 end

@@ -14,12 +14,24 @@ defmodule Unipi.Relay do
     {:ok, pid}
   end
 
+  def on(port) when port < 0 or port > 8 do
+    :error
+  end
+
   def on(port) do
     GenServer.call(__MODULE__, {:on, port})
   end
 
+  def off(port) when port < 0 or port > 8 do
+    :error
+  end
+
   def off(port) do
     GenServer.call(__MODULE__, {:off, port})
+  end
+
+  def state(port) when port < 0 or port > 8 do
+    :error
   end
 
   def state(port) do
