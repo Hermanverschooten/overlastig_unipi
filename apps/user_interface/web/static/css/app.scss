@@ -1,1 +1,87 @@
 /* This file is for your main application css. */
+@import "bourbon/bourbon";
+@import "neat/neat";
+
+$tablet: new-breakpoint(max-width 768px);
+$mobile: new-breakpoint(max-width 480px);
+$background-color: #6699FF;
+$text-color: #FFF;
+$aside-bg-color: #484848;
+
+html {
+  width: 100%;
+}
+
+html, body {
+  height: 100%;
+
+}
+
+body {
+  font-family: $helvetica;
+  background-color: darken($background-color, 10%);
+  color: $text-color;
+  a {
+    link-decoration: none;
+    color: $text-color;
+  }
+
+  @include display(flex);
+  @include flex-direction(row);
+  @include flex-wrap(nowrap);
+  @include align-content(stretch);
+  @include align-items(stretch);
+  padding: 1em;
+  @include media($tablet) {
+    @include flex-direction(column);
+    @include align-content(flex-start);
+    @include align-items(default);
+  }
+  @include media($mobile) {
+    @include flex-wrap(wrap);
+  }
+}
+.container {
+  @include flex-grow(1);
+  border-radius: 5px;
+  padding: .5em;
+  background-color: $aside-bg-color;
+  overflow-y: auto;
+}
+
+#button-list {
+  @include display(flex);
+  @include flex-direction(row);
+  @include flex-wrap(wrap);
+  height: 93vh;
+  @include media($tablet) {
+    height: 77vh;
+  }
+  margin-right: -5px;
+  margin-bottom: -5px;
+
+  a {
+    @include display(flex);
+    width: calc(25% - 5px);
+    @include media($tablet) {
+      width: calc(50% - 5px);
+    }
+    text-align:center;
+    background-color: $background-color;
+    margin-right: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+
+    flex: 1 1 auto;
+    @include display(flex);
+    @include align-content(center);
+    @include justify-content(center);
+    @include flex-direction(column);
+    text-decoration:none;
+    font-size: 2em;
+  }
+  .on {
+    color: green;
+  }
+}
+
