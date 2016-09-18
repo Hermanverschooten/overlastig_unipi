@@ -3,7 +3,7 @@ defmodule RelayTest do
   alias Unipi.Relay
 
   setup do
-    {:ok, pid} = Relay.start_link()
+    {:ok, pid} = Relay.start_link(true)
     {:ok, pid: pid}
   end
 

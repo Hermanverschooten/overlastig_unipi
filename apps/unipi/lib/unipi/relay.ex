@@ -5,7 +5,6 @@ defmodule Unipi.Relay do
 
   def start_link(restore_states \\ false) do
     {:ok, pid} = GenServer.start_link(__MODULE__, restore_states, name: __MODULE__)
-    restore_relay_state(restore_states)
     {:ok, pid}
   end
 
@@ -13,7 +12,14 @@ defmodule Unipi.Relay do
     {:ok, pid} = I2c.start_link("i2c-1", 0x20)
     # Switch pins to output mode
     I2c.write(pid, << 0x00, 0x00 >>)
-    {:ok, %{i2c: pid, save_state: restore_states}}
+
+    cache_pid = case restore_relay_state(restore_states) do
+      {:ok, cache_pid, current_state} ->
+        I2c.write(pid, << 0x09 >> <> current_state)
+        cache_pid
+      :no_restore -> :no_restore
+    end
+    {:ok, %{i2c: pid, cache_pid: cache_pid}}
   end
 
   def on(port) when port < 0 or port > 8 do
@@ -41,10 +47,10 @@ defmodule Unipi.Relay do
   end
 
   def toggle(port) do
-     case state(port) do
-       :on -> off(port)
-       :off -> on(port)
-     end
+    case state(port) do
+      :on -> off(port)
+      :off -> on(port)
+    end
   end
 
   ## Private
@@ -52,14 +58,14 @@ defmodule Unipi.Relay do
   def handle_call({:on, port}, _from, state) do
     new_value = bor(current_value(state.i2c), relay(port))
     I2c.write(state.i2c, <<0x09, new_value >>)
-    store_state(port, :on, state.save_state)
+    store_state(new_value, state.cache_pid)
     {:reply, :ok, state}
   end
 
   def handle_call({:off, port}, _from, state) do
     new_value = band(current_value(state.i2c), ~~~relay(port))
     I2c.write(state.i2c, <<0x09, new_value >>)
-    store_state(port, :off, state.save_state)
+    store_state(new_value, state.cache_pid)
     {:reply, :ok, state}
   end
 
@@ -80,21 +86,14 @@ defmodule Unipi.Relay do
     1 <<< (8 - port)
   end
 
-  def restore_relay_state(false), do: nil
+  def restore_relay_state(false), do: :no_restore
 
   def restore_relay_state(true) do
-    :ok = PersistentStorage.setup path: Application.get_env(:storage, :path)
-    for relay <- 1..8, do: restore_state(relay)
+    {:ok, pid } = I2c.start_link("i2c-1", 0x50)
+    current_state = I2c.write_read(pid, << 0x00 >>, 1)
+    {:ok, pid, current_state}
   end
 
-  defp restore_state(relay) do
-    case PersistentStorage.get(relay) do
-      nil -> PersistentStorage.put relay, :off
-      :on -> Unipi.Relay.on(relay)
-      :off -> Unipi.Relay.off(relay)
-    end
-  end
-
-  defp store_state(_port, _state, false), do: :ok
-  defp store_state(port, state, true), do: PersistentStorage.put port, state
+  defp store_state(_state, :no_restore), do: :ok
+  defp store_state(state, pid), do: I2c.write(pid, <<0x00, state>>)
 end
