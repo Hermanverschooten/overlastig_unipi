@@ -9,13 +9,6 @@ defmodule UserInterface.PageController do
     render conn, "index.html", relays: get_relay_statuses
   end
 
-  def toggle(conn, %{ "button" => button}) do
-    # {relay, _rest} = Integer.parse(button)
-    # Relay.toggle(relay)
-    # broadcast_change(relay, Relay.state(relay))
-    redirect(conn, to: page_path(conn, :index))
-  end
-
   defp get_relay_statuses do
     [
       %Button{name: "Relay 1", relay: 1, status: Relay.state(1)},
