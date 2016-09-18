@@ -1,5 +1,6 @@
 defmodule UserInterface do
   use Application
+  alias Unipi
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -10,9 +11,7 @@ defmodule UserInterface do
     children = [
       # Start the endpoint when the application starts
       supervisor(UserInterface.Endpoint, []),
-      worker(Unipi.Relay, [])
-      # Start your own worker by calling: UserInterface.Worker.start_link(arg1, arg2, arg3)
-      # worker(UserInterface.Worker, [arg1, arg2, arg3]),
+      worker(Unipi.Relay, [true])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

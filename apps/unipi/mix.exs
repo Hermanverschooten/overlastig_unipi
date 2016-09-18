@@ -25,7 +25,7 @@ defmodule Unipi.Mixfile do
   end
 
   def applications(_) do
-  [:logger]
+    [:logger, :persistent_storage]
   end
 
   # Dependencies can be Hex packages:
@@ -44,7 +44,8 @@ defmodule Unipi.Mixfile do
   defp deps do
     [
       {:dummy_libs, in_umbrella: true, only: [:dev, :test]},
+      {:persistent_storage, git: "https://github.com/cellulose/persistent_storage.git", branch: "master"},
       {:elixir_ale, "~> 0.5.6", only: :prod}
-   ]
+    ]
   end
 end
