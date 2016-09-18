@@ -2,7 +2,7 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :storage,
+config :unipi,
   path: "/tmp/storage"
 
 # This configuration is loaded before any dependency and is restricted

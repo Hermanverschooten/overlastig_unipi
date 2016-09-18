@@ -17,8 +17,8 @@ config :user_interface, UserInterface.Endpoint,
   pubsub: [name: UserInterface.PubSub,
     adapter: Phoenix.PubSub.PG2]
 
-config :storage,
-  path: "/root/storage"
+config :unipi,
+  path: "/root/storage/"
 
 config :logger, level: :debug
 
