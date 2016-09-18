@@ -59,7 +59,7 @@ defmodule Unipi.Relay do
   def handle_call({:off, port}, _from, state) do
     new_value = band(current_value(state.i2c), ~~~relay(port))
     I2c.write(state.i2c, <<0x09, new_value >>)
-    store_state(port, :on, state.save_state)
+    store_state(port, :off, state.save_state)
     {:reply, :ok, state}
   end
 
