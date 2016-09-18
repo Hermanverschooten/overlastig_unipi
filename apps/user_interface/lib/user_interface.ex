@@ -1,4 +1,5 @@
 defmodule UserInterface do
+  require Logger
   use Application
   alias Unipi
 
@@ -11,7 +12,10 @@ defmodule UserInterface do
     children = [
       # Start the endpoint when the application starts
       supervisor(UserInterface.Endpoint, []),
-      worker(Unipi.Relay, [true])
+      worker(Unipi.Relay, [true]),
+      worker(Unipi.Pins, [
+        [1,2,3,4,5,6,7,8], :falling, fn(pin, _dir) -> button_push(pin) end
+      ])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -25,5 +29,10 @@ defmodule UserInterface do
   def config_change(changed, _new, removed) do
     UserInterface.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def button_push(pin) do
+    Unipi.Relay.toggle(pin)
+    UserInterface.Endpoint.broadcast_from! self(), "relay_changes:lobby", "change", %{ relay: pin, state: Unipi.Relay.state(pin) }
   end
 end
