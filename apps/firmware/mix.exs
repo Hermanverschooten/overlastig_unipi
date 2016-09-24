@@ -21,7 +21,8 @@ defmodule Firmware.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Firmware, []},
-     applications: [:logger, :nerves_networking, :nerves_cell, :unipi, :user_interface, :elixir_ale]]
+     applications: [:logger_multicast_backend, :logger, :nerves_networking, :nerves_cell, :unipi,
+      :user_interface, :gpio_rpi, :elixir_ale]]
   end
 
   def deps do
@@ -31,7 +32,9 @@ defmodule Firmware.Mixfile do
       {:nerves_cell, github: "ghitchens/nerves_cell"},
       {:unipi, in_umbrella: true },
       {:user_interface, in_umbrella: true},
-      {:elixir_ale, "~> 0.5.6"}
+      {:gpio_rpi, "~> 0.1.0"},
+      {:elixir_ale, "~> 0.5.6"},
+      {:logger_multicast_backend, github: "cellulose/logger_multicast_backend" }
     ]
   end
 
@@ -43,5 +46,4 @@ defmodule Firmware.Mixfile do
     ["deps.precompile": ["nerves.precompile", "deps.precompile"],
      "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"]]
   end
-
 end

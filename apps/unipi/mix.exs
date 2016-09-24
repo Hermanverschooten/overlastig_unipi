@@ -28,22 +28,10 @@ defmodule Unipi.Mixfile do
     [:logger]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # To depend on another app inside the umbrella:
-  #
-  #   {:myapp, in_umbrella: true}
-  #
-  # Type "mix help deps" for more examples and options
   defp deps do
     [
       {:dummy_libs, in_umbrella: true, only: [:dev, :test]},
+      {:gpio_rpi, "~> 0.1.0"},
       {:elixir_ale, "~> 0.5.6", only: :prod}
     ]
   end

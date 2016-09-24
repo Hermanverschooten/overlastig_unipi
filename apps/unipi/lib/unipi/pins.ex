@@ -1,6 +1,9 @@
 defmodule Unipi.Pins do
   require Logger
   use GenServer
+  if Mix.env == :dev do
+    alias DummyGpioRpi, as: GpioRpi
+  end
 
   @doc """
   Register to be notified of events on the 12 GPIO pins of the UniPi.
@@ -20,8 +23,11 @@ defmodule Unipi.Pins do
 
   def init(%{pins: pins, callback: _callback, direction: direction} = opts) do
     for pin <- pins do
-      {:ok, pid } = Gpio.start_link(get_gpio(pin), :input)
-      Gpio.set_int(pid, direction)
+      gpio = get_gpio(pin)
+      Logger.info "Listening to #{pin} -> GPIO#{gpio}"
+      {:ok, pid } = GpioRpi.start_link(gpio, :input)
+      GpioRpi.set_int(pid, direction)
+      GpioRpi.set_mode(pid, :up)
     end
     {:ok, opts}
   end
@@ -31,11 +37,17 @@ defmodule Unipi.Pins do
 
   def handle_info({:gpio_interrupt, gpio, direction}, state) do
     pin = get_pin(gpio)
-    Logger.info "Received Message '#{direction}' from #{pin}"
-    case state.direction do
-      :both -> state.callback.(pin, direction)
-      ^direction -> state.callback.(pin, direction)
-      _ -> nil
+    case Map.get(state, gpio) do
+      true ->
+        Logger.info "Received Message '#{direction}' from #{pin}"
+        case state.direction do
+          :both -> state.callback.(pin, direction)
+          ^direction -> state.callback.(pin, direction)
+          _ -> nil
+        end
+      _ ->
+        Logger.info "Ignoring received Message from #{pin}"
+        state = Map.put(state, gpio, true)
     end
     {:noreply, state}
   end

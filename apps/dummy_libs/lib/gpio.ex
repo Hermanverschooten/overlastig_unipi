@@ -48,6 +48,13 @@ defmodule Gpio do
 
   end
 
+  @doc """
+  Set pullup register
+  """
+  def set_mode(pid, mode) do
+
+  end
+
   def trigger_int(pid, from, direction) do
     GenServer.cast(pid, {:trigger_int, from, direction})
   end
