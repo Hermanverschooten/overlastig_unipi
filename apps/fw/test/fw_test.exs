@@ -1,6 +1,6 @@
-defmodule FirmwareTest do
+defmodule FwTest do
   use ExUnit.Case
-  doctest Firmware
+  doctest Fw
 
   test "the truth" do
     assert 1 + 1 == 2

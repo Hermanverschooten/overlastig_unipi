@@ -6,7 +6,7 @@ defmodule UserInterface.PageController do
   alias Unipi.Relay
 
   def index(conn, _params) do
-    render conn, "index.html", relays: get_relay_statuses
+    render conn, "index.html", relays: get_relay_statuses()
   end
 
   defp get_relay_statuses do
