@@ -12,7 +12,7 @@ defmodule UserInterface.Application do
       supervisor(UserInterfaceWeb.Endpoint, []),
       worker(Unipi.Relay, [true]),
       worker(Unipi.Pins, [
-        [1,2,3,4,5,6,7,8], :falling, fn(pin, _dir) -> button_push(pin) end]
+        [1,2,3,4,5,6,7,8,9], :falling, fn(pin, _dir) -> button_push(pin) end]
       ),
       worker(MusicServer, [])
     ]
@@ -30,6 +30,9 @@ defmodule UserInterface.Application do
     :ok
   end
 
+  def button_push(9) do
+    MusicServer.toggle()
+  end
 
   def button_push(pin) do
     Unipi.Relay.toggle(pin)
