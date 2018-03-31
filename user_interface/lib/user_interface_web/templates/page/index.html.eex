@@ -1,0 +1,7 @@
+<div id='button-list'>
+  <%= for button <-  @relays do %>
+    <%= link to: "#", class: button.status, id: button.relay do %>
+      <%= button.name %>
+    <%end%>
+  <% end %>
+</div>
